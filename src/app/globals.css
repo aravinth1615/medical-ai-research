@@ -1,0 +1,322 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   MEDICAL AI — design tokens
+   Dark-only. The palette is the Research workspace's ("aether") applied to the
+   whole product: near-black indigo planes, white hairlines, an indigo accent,
+   and Tailwind v3's hex palette pinned so `indigo-600` is the exact #4f46e5 the
+   reference buttons use (v4's oklch palette reads visibly more saturated).
+   ========================================================================== */
+
+@theme {
+  /* ---- Tailwind v3 palette, pinned ---------------------------------------- */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-indigo-100: #e0e7ff;
+  --color-indigo-200: #c7d2fe;
+  --color-indigo-300: #a5b4fc;
+  --color-indigo-400: #818cf8;
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
+  --color-indigo-700: #4338ca;
+  --color-violet-400: #a78bfa;
+  --color-violet-500: #8b5cf6;
+  --color-sky-300: #7dd3fc;
+  --color-sky-400: #38bdf8;
+  --color-sky-500: #0ea5e9;
+  --color-teal-300: #5eead4;
+  --color-teal-400: #2dd4bf;
+  --color-teal-500: #14b8a6;
+  --color-emerald-300: #6ee7b7;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-amber-300: #fcd34d;
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+  --color-orange-300: #fdba74;
+  --color-orange-400: #fb923c;
+  --color-orange-500: #f97316;
+  --color-rose-300: #fda4af;
+  --color-rose-400: #fb7185;
+  --color-rose-500: #f43f5e;
+  --color-red-300: #fca5a5;
+  --color-red-400: #f87171;
+  --color-red-500: #ef4444;
+
+  /* ---- Planes (page → rail → panel → raised) ------------------------------ */
+  --color-void: #0b0d13; /* insets, wells, table headers */
+  --color-canvas: #090a0f; /* page background */
+  --color-rail: #0c0e15; /* sidebar, top bar, side panes */
+  --color-panel: #0f111a; /* cards */
+  --color-raised: #141722; /* popovers, hovered rows */
+  --color-overlay: #1b1f2e; /* pressed states, chips */
+
+  /* ---- Ink ----------------------------------------------------------------- */
+  --color-ink: #f3f4f6; /* headings, values */
+  --color-ink-2: #d1d5db; /* body copy */
+  --color-ink-3: #9ca3af; /* labels, captions */
+  --color-ink-4: #6b7280; /* disabled, decorative only */
+
+  /* ---- Lines --------------------------------------------------------------- */
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-2: rgb(255 255 255 / 0.14);
+
+  /* ---- Accent -------------------------------------------------------------- */
+  --color-iris: #6366f1;
+  --color-iris-deep: #4f46e5;
+  --color-iris-soft: #a5b4fc;
+  --color-iris-well: #1e2140;
+
+  /* ---- Status (always shipped with an icon + label, never colour alone) --- */
+  --color-critical: #f87171;
+  --color-warn: #fbbf24;
+  --color-good: #34d399;
+
+  /* ---- Type ---------------------------------------------------------------- */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* ---- Motion: ease-out for enter/exit, ease-in-out for on-screen moves ---- */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --animate-fade-in: fade-in 200ms var(--ease-out) both;
+  --animate-rise-in: rise-in 240ms var(--ease-out) both;
+}
+
+/* ---- Semantic z-index scale ------------------------------------------------ */
+@theme {
+  --z-index-sticky: 30;
+  --z-index-rail: 40;
+  --z-index-backdrop: 50;
+  --z-index-drawer: 60;
+  --z-index-toast: 70;
+  --z-index-popover: 80;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --shadow-pop: 0 16px 40px -10px rgb(0 0 0 / 0.78), 0 2px 8px -2px rgb(0 0 0 / 0.5);
+    /* The app footer's height — anything sized to the window inside the app
+       shell (sticky side navs) subtracts it, or its bottom hides under it. */
+    --app-footer-h: 2.25rem;
+  }
+
+  html {
+    background-color: var(--color-canvas);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  * {
+    border-color: var(--color-line);
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink-2);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: var(--color-iris-well);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-iris);
+    outline-offset: 2px;
+  }
+
+  /* Tailwind v4's preflight sets `cursor: default` on buttons. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="menuitem"],
+  [role="tab"],
+  summary,
+  label:has(> input[type="checkbox"]) {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(255 255 255 / 0.14) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(255 255 255 / 0.14);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(255 255 255 / 0.25);
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@layer utilities {
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .surface-raised {
+    background-color: var(--color-raised);
+    box-shadow: inset 0 0 0 1px var(--color-line-2), var(--shadow-pop);
+  }
+
+  .grid-dots {
+    background-image: radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.05) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+
+  /* Reference-range track: red → amber → green band → amber → red. */
+  .range-track {
+    position: relative;
+    height: 8px;
+    width: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(
+      90deg,
+      #991b1b 0%,
+      #b45309 20%,
+      #065f46 26%,
+      #065f46 74%,
+      #b45309 80%,
+      #991b1b 100%
+    );
+  }
+  .range-track.upper-only {
+    background: linear-gradient(90deg, #065f46 0%, #065f46 60%, #b45309 80%, #991b1b 100%);
+  }
+  .range-pin {
+    position: absolute;
+    top: -4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 9999px;
+    border: 2.5px solid var(--color-panel);
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.45);
+    transform: translateX(-50%);
+  }
+
+  /* Popovers scale out of their trigger, not the centre. */
+  .anim-pop {
+    transform-origin: var(--radix-popper-transform-origin, center);
+  }
+  .anim-pop[data-state="open"],
+  .anim-pop[data-state="delayed-open"],
+  .anim-pop[data-state="instant-open"] {
+    animation: pop-in 160ms var(--ease-out);
+  }
+  .anim-pop[data-state="closed"] {
+    animation: pop-out 120ms var(--ease-out);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* A model's in-flight progress sweep (research run cards). */
+@keyframes research-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(250%);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pop-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+/* Reduced motion: fewer and gentler, not zero — only movement is removed. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-property: opacity, color, background-color, border-color, box-shadow !important;
+    transition-duration: 120ms !important;
+    animation-duration: 120ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* A one-line chip row that scrolls sideways without a visible bar. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
